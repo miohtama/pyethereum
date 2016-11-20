@@ -1,15 +1,15 @@
-try:
-    from Crypto.Hash import keccak
-    sha3_256 = lambda x: keccak.new(digest_bits=256, data=x).digest()
-except:
-    import sha3 as _sha3
-    sha3_256 = lambda x: _sha3.sha3_256(x).digest()
-from bitcoin import privtopub
+import random
 import sys
+
+from bitcoin import privtopub
 import rlp
 from rlp.sedes import big_endian_int, BigEndianInt, Binary
 from rlp.utils import decode_hex, encode_hex, ascii_chr, str_to_bytes
-import random
+
+import Crypto
+from Crypto.Hash import keccak
+sha3_256 = lambda x: keccak.new(digest_bits=256, data=x).digest()
+
 
 big_endian_to_int = lambda x: big_endian_int.deserialize(str_to_bytes(x).lstrip(b'\x00'))
 int_to_big_endian = lambda x: big_endian_int.serialize(x)
@@ -119,7 +119,12 @@ def sha3(seed):
     sha3_count[0] += 1
     return sha3_256(to_string(seed))
 
-assert encode_hex(sha3(b'')) == b'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
+
+# Sanity check for our hash functions as there are different variations
+sha3_hash = encode_hex(sha3(b''))
+expected = b'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
+sha3_hash == expected, "Could not get correct sha3() results. Expected {}, got {}, Crypto is {}" \
+    .format(expected, sha3_hash, Crypto)
 
 
 def privtoaddr(x, extended=False):
