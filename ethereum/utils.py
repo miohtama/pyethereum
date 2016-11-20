@@ -1,15 +1,13 @@
-try:
-    from Crypto.Hash import keccak
-    sha3_256 = lambda x: keccak.new(digest_bits=256, data=x).digest()
-except:
-    import sha3 as _sha3
-    sha3_256 = lambda x: _sha3.sha3_256(x).digest()
-from bitcoin import privtopub
+import random
 import sys
+from bitcoin import privtopub
 import rlp
 from rlp.sedes import big_endian_int, BigEndianInt, Binary
 from rlp.utils import decode_hex, encode_hex, ascii_chr, str_to_bytes
-import random
+
+from Crypto.Hash import keccak
+sha3_256 = lambda x: keccak.new(digest_bits=256, data=x).digest()
+
 
 big_endian_to_int = lambda x: big_endian_int.deserialize(str_to_bytes(x).lstrip(b'\x00'))
 int_to_big_endian = lambda x: big_endian_int.serialize(x)
