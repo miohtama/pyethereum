@@ -124,8 +124,8 @@ def sha3(seed):
 # Sanity check for our hash functions as there are different variations
 sha3_hash = encode_hex(sha3(b''))
 expected = b'c5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470'
-sha3_hash == expectd, "Could not get correct sha3() results. Expected {}, got {}" \
-    .format(expected, sha3_hash)
+sha3_hash == expected, "Could not get correct sha3() results. Expected {}, got {}, Crypto is {}" \
+    .format(expected, sha3_hash, Crypto)
 
 
 def privtoaddr(x, extended=False):
